@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title> COCKTAILS </title>
+
+<style>
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0c1429, #c0c9c7);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.card {
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 15px auto;
+}
+
+.logo {
+    width: 280px;
+    max-width: 80%;
+    border-radius: 50%;
+}
+
+h1 {
+    color: #000;
+    text-shadow: 0 0 10px #fff;
+    padding: 15px;
+    font-size: clamp(24px, 4vw, 38px);
+}
+
+h3 {
+    color: #000;
+    text-shadow: 0 0 10px #fff;
+    padding: 15px;
+    font-family: Georgia, serif;
+    font-size: clamp(18px, 3vw, 28px);
+}
+
+.cupon {
+    font-size: 28px;
+    background: black ;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 15px 0;
+    letter-spacing: 3px;
+}
+
+button {
+    padding: 15px 25px;
+    background: #424242;
+    color: white;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+}
+
+footer {
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <img src="logo.png" class="logo">
+    <br></br>
+
+
+    <h1>Bienvenido al menú de cocteleria de Lubo</h1>
+<br></br>
+
+
+    <img src="1.png" >
+    <br></br>
+    <img src="2.png" >
+    <br></br>
+    <img src="3.png" >
+    <br></br>
+    <img src="4.png" >
+    <br></br>
+    <img src="5.png" >
+    <br></br>
+ 
+ 
+    <h3> TE ESPERAMOS EN: 👇👇</h3>
+
+    <button onclick="irMapa()">📍 L U B O </button>
+<footer> <!--Pie de pag-->
+            <p> Lubo Services 2026 © Todos los derechos reservados.</p>
+        </footer>
+
+</div>
+
+<script>
+// Generar código único
+function generarCupon() {
+    return 'LUBO' + Math.random().toString(36).substring(2,8).toUpperCase();
+}
+
+// Verificar si ya tiene uno
+let cuponGuardado = localStorage.getItem("cupon");
+
+if (!cuponGuardado) {
+    cuponGuardado = generarCupon();
+    localStorage.setItem("cupon", cuponGuardado);
+}
+
+document.getElementById("cupon").innerText = cuponGuardado;
+
+function irMapa(){
+    window.open("https://www.instagram.com/lubo_serv1ce?igsh=aGg2OXJsbnp6MnZx&utm_source=qr", "_blank");
+}
+</script>
+
+</body>
+ 
+</html>
