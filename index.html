@@ -1,4 +1,540 @@
+
 <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>QR Lubo Services</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: lab(49.02% -13.23 53.01);
+            font-family: Arial, Helvetica, sans-serif;
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            padding: 25px 15px;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            text-align: center;
+            color: black;
+            font-size: clamp(24px, 6vw, 40px);
+            text-shadow: 0 0 10px #ffffff;
+        }
+
+        .subtitulo {
+            margin: 0 0 25px;
+            text-align: center;
+            font-size: clamp(14px, 4vw, 18px);
+        }
+
+        /* CONTENEDOR DEL QR */
+        #qr-container {
+            position: relative;
+
+            background: white;
+            padding: 18px;
+
+            border-radius: 20px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            box-shadow:
+                0 0 20px rgba(0, 0, 0, 0.35);
+
+            width: min(90vw, 400px);
+            aspect-ratio: 1 / 1;
+        }
+
+        /* QR */
+        #qrcode {
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #qrcode img,
+        #qrcode canvas {
+            width: 100% !important;
+            height: 100% !important;
+
+            max-width: 360px;
+            max-height: 360px;
+
+            image-rendering: pixelated;
+        }
+
+        /*
+        LOGO CENTRAL
+
+        El círculo blanco funciona como "zona de protección"
+        para que el logo no interfiera demasiado con los módulos
+        del QR.
+        */
+        .logo-container {
+            position: absolute;
+
+            top: 50%;
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            width: 76px;
+            height: 76px;
+
+            background: white;
+
+            border-radius: 50%;
+
+            padding: 7px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            box-shadow: 0 0 0 5px white;
+        }
+
+        #logo {
+            width: 100%;
+            height: 100%;
+
+            object-fit: contain;
+
+            border-radius: 50%;
+        }
+
+        /* BOTONES */
+
+        .botones {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+            gap: 12px;
+
+            margin-top: 25px;
+        }
+
+        button {
+            border: none;
+
+            padding: 13px 20px;
+
+            border-radius: 10px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            background: #222e35;
+
+            color: white;
+
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+
+            transition: transform 0.15s ease,
+                        background 0.15s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+
+            background: #111820;
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .direccion {
+            margin-top: 20px;
+
+            text-align: center;
+
+            font-size: 13px;
+
+            opacity: 0.9;
+
+            max-width: 400px;
+
+            word-break: break-all;
+        }
+
+        footer {
+            margin-top: 30px;
+
+            text-align: center;
+
+            font-size: 13px;
+
+            opacity: 0.85;
+        }
+
+        /* AJUSTES PARA CELULARES */
+
+        @media (max-width: 480px) {
+
+            body {
+                padding: 20px 10px;
+            }
+
+            #qr-container {
+                width: 88vw;
+                padding: 14px;
+            }
+
+            .logo-container {
+                width: 65px;
+                height: 65px;
+
+                padding: 6px;
+            }
+
+            button {
+                width: 90vw;
+                max-width: 300px;
+            }
+        }
+
+        /* IMPRESIÓN */
+
+        @media print {
+
+            body {
+                background: white;
+                color: black;
+
+                padding: 0;
+
+                min-height: auto;
+            }
+
+            h1,
+            .subtitulo,
+            .botones,
+            .direccion,
+            footer {
+                display: none;
+            }
+
+            #qr-container {
+                box-shadow: none;
+
+                width: 500px;
+                height: 500px;
+
+                margin: 30px auto;
+
+                padding: 20px;
+            }
+
+            .logo-container {
+                width: 90px;
+                height: 90px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>📲 ¡ESCÁNAME! 🍸🍾</h1>
+
+    <p class="subtitulo">
+        Menú de coctelería LUBO
+    </p>
+
+    <!-- QR -->
+    <div id="qr-container">
+
+        <div id="qrcode"></div>
+
+        <!-- Logo -->
+        <div class="logo-container">
+            <img
+                id="logo"
+                src="logo.png"
+                alt="LUBO Services"
+            >
+        </div>
+
+    </div>
+
+    <!-- BOTONES -->
+
+    <div class="botones">
+
+        <button onclick="descargarQR()">
+            📥 Descargar QR
+        </button>
+
+        <button onclick="imprimirQR()">
+            🖨️ Imprimir QR
+        </button>
+
+    </div>
+
+    <footer>
+        Lubo Services 2026 © Todos los derechos reservados.
+    </footer>
+
+
+    <!-- LIBRERÍA QR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+    <script>
+
+        /*
+        =====================================================
+        URL DESTINO DEL QR
+        =====================================================
+        */
+
+        const URL_MENU =
+            "https://irving201.github.io/cocktails/cocteles.html";
+
+
+        /*
+        =====================================================
+        GENERAR QR
+        =====================================================
+        */
+
+        const qr = new QRCode(
+            document.getElementById("qrcode"),
+            {
+                text: URL_MENU,
+
+                /*
+                QR grande para obtener buena resolución
+                */
+                width: 800,
+                height: 800,
+
+                /*
+                Alto nivel de corrección de errores.
+                Permite que el QR siga funcionando aunque
+                el logo tape una pequeña parte.
+                */
+                correctLevel: QRCode.CorrectLevel.H
+            }
+        );
+
+
+        /*
+        =====================================================
+        DESCARGAR QR
+        =====================================================
+        */
+
+        function descargarQR() {
+
+            const canvas =
+                document.querySelector("#qrcode canvas");
+
+            if (!canvas) {
+                alert("Espera un momento mientras se genera el QR.");
+                return;
+            }
+
+            /*
+            Creamos un canvas nuevo para generar una imagen
+            blanca con el QR y el logo en el centro.
+            */
+
+            const tamaño = 1000;
+
+            const nuevoCanvas =
+                document.createElement("canvas");
+
+            nuevoCanvas.width = tamaño;
+            nuevoCanvas.height = tamaño;
+
+            const ctx =
+                nuevoCanvas.getContext("2d");
+
+            /*
+            Fondo blanco
+            */
+
+            ctx.fillStyle = "#ffffff";
+
+            ctx.fillRect(
+                0,
+                0,
+                tamaño,
+                tamaño
+            );
+
+            /*
+            Dibujar QR
+            */
+
+            ctx.drawImage(
+                canvas,
+                0,
+                0,
+                tamaño,
+                tamaño
+            );
+
+            /*
+            Dibujar zona blanca para el logo
+            */
+
+            const centro = tamaño / 2;
+
+            const radio = 55;
+
+            ctx.beginPath();
+
+            ctx.arc(
+                centro,
+                centro,
+                radio,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fillStyle = "#ffffff";
+
+            ctx.fill();
+
+            /*
+            Borde blanco adicional
+            */
+
+            ctx.beginPath();
+
+            ctx.arc(
+                centro,
+                centro,
+                radio + 7,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.strokeStyle = "#ffffff";
+
+            ctx.lineWidth = 10;
+
+            ctx.stroke();
+
+
+            /*
+            Cargar logo
+            */
+
+            const logo =
+                new Image();
+
+            logo.src = "logo.png";
+
+            logo.onload = function () {
+
+                const tamañoLogo = 82;
+
+                ctx.save();
+
+                /*
+                Recorte circular
+                */
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    centro,
+                    centro,
+                    tamañoLogo / 2,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.clip();
+
+                ctx.drawImage(
+                    logo,
+                    centro - tamañoLogo / 2,
+                    centro - tamañoLogo / 2,
+                    tamañoLogo,
+                    tamañoLogo
+                );
+
+                ctx.restore();
+
+
+                /*
+                Descargar
+                */
+
+                const enlace =
+                    document.createElement("a");
+
+                enlace.download =
+                    "QR-LUBO-COCTELERIA.png";
+
+                enlace.href =
+                    nuevoCanvas.toDataURL("image/png");
+
+                enlace.click();
+
+            };
+
+        }
+
+
+        /*
+        =====================================================
+        IMPRIMIR QR
+        =====================================================
+        */
+
+        function imprimirQR() {
+
+            window.print();
+
+        }
+
+    </script>
+
+</body>
+</html>
+
+<!-- En la terminal CADA MODIFICACION PONER
+git  add .
+git commit -m "cambios"
+git push
+
+(SIN force después de esto 👍) -->
+
+
+
+
+<!--<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -63,18 +599,10 @@ new QRCode(document.getElementById("qrcode"), {/*Cambio*/text: "https://irving20
     
 
      
-<footer> <!--Pie de pag-->
+<footer> Pie de p>
             <p> Lubo Services 2026 © Todos los derechos reservados.</p>
         </footer>
 </body>
-<!-- dd -->
- 
 </html>
 
-
-<!-- En la terminal CADA MODIFICACION PONER
-git  add .
-git commit -m "cambios"
-git push
-
-(SIN force después de esto 👍) -->
+-->
